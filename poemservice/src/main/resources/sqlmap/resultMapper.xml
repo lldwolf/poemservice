@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="poem">
+	<resultMap type="com.poem.lld.model.Poem" id="poemMap">
+		<id column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="album" property="album" />
+		<result column="type" property="type" />
+		<result column="url" property="url" />
+		<result column="author" property="author" />
+		<result column="dynasty" property="dynasty" />
+		<result column="public_degree" property="publicDegree" />
+	</resultMap>
+</mapper>
