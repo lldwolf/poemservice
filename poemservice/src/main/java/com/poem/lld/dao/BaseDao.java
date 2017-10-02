@@ -2,6 +2,7 @@ package com.poem.lld.dao;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -12,31 +13,31 @@ import org.apache.logging.log4j.Logger;
 
 public class BaseDao {
     private static final Logger logger = LogManager.getLogger(BaseDao.class);
-    private static SqlSession sqlSession;
+    private SqlSessionFactory sqlSessionFactory;
 
-    static {
-        try {
-            sqlSession = getSqlSession();
-        } catch (IOException e) {
-            logger.error("Failed get MyBatis Sql Session!", e);
-        }
-    }
-
-    private static SqlSession getSqlSession() throws IOException {
+    public BaseDao() throws IOException {
         String resource = "SqlMapConfig.xml";
-        InputStream inputStream = null;
-        SqlSession sqlSession = null;
-
-        inputStream = Resources.getResourceAsStream(resource);
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-        sqlSession = sqlSessionFactory.openSession();
-
-        return sqlSession;
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+    }
+    
+    public BaseDao(SqlSessionFactory sqlSessionFactory) {
+        this.sqlSessionFactory = sqlSessionFactory;
     }
 
     protected Object queryById(String sqlMapId, int id) {
         logger.debug("[" + sqlMapId + "] query by id: " + id);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
         Object queryResult = sqlSession.selectOne(sqlMapId, id);
+        sqlSession.close();
+        return queryResult;
+    }
+
+    protected List<Object> queryByName(String sqlMapId, String name) {
+        logger.debug("[" + sqlMapId + "] query by name: " + name);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        List<Object> queryResult = sqlSession.selectList(sqlMapId, name);
+        sqlSession.close();
         return queryResult;
     }
 
@@ -47,17 +48,21 @@ public class BaseDao {
             throw new IllegalArgumentException("Argument is null!");
         }
 
+        SqlSession sqlSession = sqlSessionFactory.openSession();
         int updatedCount = sqlSession.insert(sqlMapId, newObj);
         logger.debug("updated count: " + updatedCount);
         sqlSession.commit();
+        sqlSession.close();
 
         return updatedCount;
     }
 
     protected int deleteById(String sqlMapId, int id) {
         logger.debug("[" + sqlMapId + "] delete by id: " + id);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
         int deleteCount = sqlSession.delete(sqlMapId, id);
         sqlSession.commit();
+        sqlSession.close();
         return deleteCount;
     }
 
@@ -68,9 +73,11 @@ public class BaseDao {
             throw new IllegalArgumentException("Argument is null!");
         }
 
+        SqlSession sqlSession = sqlSessionFactory.openSession();
         int updatedCount = sqlSession.update(sqlMapId, updatedObj);
         logger.debug("updated count: " + updatedCount);
         sqlSession.commit();
+        sqlSession.close();
 
         return updatedCount;
     }

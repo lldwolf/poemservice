@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="poem">
-	<select id="findPoemById" parameterType="int" resultMap="poem.poemMap">
+<mapper namespace="com.poem.lld.mapper.PoemMapper">
+	<select id="getPoemById" parameterType="int" resultMap="poem.poemMap">
 		select * from poem where id=#{id}
 	</select>
 
