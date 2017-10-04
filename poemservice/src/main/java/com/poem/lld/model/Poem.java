@@ -1,7 +1,5 @@
 package com.poem.lld.model;
 
-import com.poem.lld.util.Constants;
-
 public class Poem {
 
     private int id;
@@ -13,6 +11,8 @@ public class Poem {
     private String url;
     private int publicDegree;
     private String dynasty;
+    private int authorId;
+    private Author authorEntity;
 
     public int getId() {
         return id;
@@ -89,23 +89,44 @@ public class Poem {
     @Override
     public String toString() {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("id: " + this.id);
-        buffer.append(Constants.LINE_SEPARATOR);
-        buffer.append("title: " + this.title);
-        buffer.append(Constants.LINE_SEPARATOR);
-        buffer.append("content: " + this.content);
-        buffer.append(Constants.LINE_SEPARATOR);
-        buffer.append("type: " + this.getType());
-        buffer.append(Constants.LINE_SEPARATOR);
-        buffer.append("dynasty: " + this.getDynasty());
-        buffer.append(Constants.LINE_SEPARATOR);
-        buffer.append("public degree: " + this.getPublicDegree());
-        buffer.append(Constants.LINE_SEPARATOR);
-        buffer.append("author: " + this.getAuthor());
-        buffer.append(Constants.LINE_SEPARATOR);
-        buffer.append("albutm:" + this.getAlbum());
-        buffer.append(Constants.LINE_SEPARATOR);
+        buffer.append(this.id);
+        buffer.append('|');
+        buffer.append(this.title);
+        buffer.append('|');
+        buffer.append(this.getDynasty());
+        buffer.append('|');
+        buffer.append(this.getAuthor());
+        buffer.append('|');
+        buffer.append(this.content);
+        buffer.append('|');
+        buffer.append(this.getType());
+        buffer.append('|');
+        buffer.append(this.getPublicDegree());
+        buffer.append('|');
+        buffer.append(this.getAlbum());
+        buffer.append('|');
+        
+        if (this.authorEntity != null) {
+            buffer.append("author: " + this.authorEntity.getName());
+        }
+        
         return buffer.toString();
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
+    }
+
+    public Author getAuthorEntity() {
+        return authorEntity;
+    }
+
+    public void setAuthorEntity(Author authorEntity) {
+        this.authorEntity = authorEntity;
     }
 
 }

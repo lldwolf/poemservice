@@ -2,6 +2,7 @@ package com.poem.lld.dao.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.ibatis.io.Resources;
@@ -15,6 +16,7 @@ import org.junit.Test;
 
 import com.poem.lld.mapper.PoemMapper;
 import com.poem.lld.model.Poem;
+import com.poem.lld.model.PoemQueryCriteria;
 
 import junit.framework.Assert;
 
@@ -48,6 +50,42 @@ public class PoemMapperTest {
         if (poemList.size() > 0) {
             poemList.forEach(poem -> {
                 System.out.println(poem.getTitle());
+            });
+        }
+    }
+
+    @Test
+    public void testQueryPoem() throws IOException {
+        PoemQueryCriteria filter = new PoemQueryCriteria();
+        filter.setAuthor("李");
+        filter.setContent("月");
+        filter.setTitle("月");
+        filter.setTypes(Arrays.asList(new String[] {"诗", "词"}));
+        List<Poem> poemList = poemMapper.queryPoem(filter);
+        Assert.assertNotNull(poemList);
+
+        System.out.println("result count: " + poemList.size());
+        if (poemList.size() > 0) {
+            poemList.forEach(poem -> {
+                System.out.println(poem);
+            });
+        }
+    }
+
+    @Test
+    public void testSearchFullPoem() throws IOException {
+        PoemQueryCriteria filter = new PoemQueryCriteria();
+        filter.setAuthor("李");
+        filter.setContent("月");
+        filter.setTitle("月");
+        filter.setTypes(Arrays.asList(new String[] {"诗", "词"}));
+        List<Poem> poemList = poemMapper.searchFullPoem(filter);
+        Assert.assertNotNull(poemList);
+
+        System.out.println("result count: " + poemList.size());
+        if (poemList.size() > 0) {
+            poemList.forEach(poem -> {
+                System.out.println(poem);
             });
         }
     }

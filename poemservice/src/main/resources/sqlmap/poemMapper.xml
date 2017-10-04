@@ -3,12 +3,33 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.poem.lld.mapper.PoemMapper">
+
 	<select id="getPoemById" parameterType="int" resultMap="poem.poemMap">
 		select * from poem where id=#{id}
 	</select>
 
 	<select id="findPoemByAuthor" parameterType="java.lang.String" resultMap="poem.poemMap">
 		select * from poem where author LIKE '%${value}%'
+	</select>
+
+	<select id="queryPoem" parameterType="poemCriteria" resultMap="poem.poemMap">
+		select * from poem
+		<where>
+			<if test="author != null and author != ''">
+				and author like '%${author}%'
+			</if>
+			<if test="content != null and content != ''">
+				and content like '%${content}%'
+			</if>
+			<if test="author != null and author != ''">
+				and title like '%${title}%'
+			</if>
+			<if test="types != null">
+				<foreach collection="types" item="type" open="and type in (" close=")" separator=", ">
+					#{type}
+				</foreach>
+			</if>
+		</where>
 	</select>
 
 	<insert id="insertPoem" parameterType="com.poem.lld.model.Poem">
@@ -29,5 +50,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			`type` = #{type}, url = #{url}, public_degree = #{publicDegree}, dynasty = #{dynasty} 
 		where id=#{id}
 	</update>
+	
+	<select id="searchFullPoem" parameterType="poemCriteria" resultMap="poem.poemMap">
+		select a.id author_id, a.name, a.dynasty, b.*
+		from author a, poem b
+		<where>
+			a.id = b.author_id
+			<if test="author != null and author != ''">
+				and a.name like '%${author}%'
+			</if>
+			<if test="content != null and content != ''">
+				and b.content like '%${content}%'
+			</if>
+			<if test="author != null and author != ''">
+				and b.title like '%${title}%'
+			</if>
+			<if test="types != null">
+				<foreach collection="types" item="type" open="and b.type in (" close=")" separator=", ">
+					#{type}
+				</foreach>
+			</if>
+		</where>
+	</select>
 
 </mapper>

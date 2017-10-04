@@ -13,5 +13,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result column="author" property="author" />
 		<result column="dynasty" property="dynasty" />
 		<result column="public_degree" property="publicDegree" />
+		<result column="author_id" property="authorId" />
+		
+		<association property="authorEntity" javaType="com.poem.lld.model.Author">
+			<id column="author_id" property="id" />
+			<result column="name" property="name" />
+			<result column="dynasty" property="dynasty" />
+		</association>
 	</resultMap>
 </mapper>
