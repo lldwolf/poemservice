@@ -14,11 +14,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result column="dynasty" property="dynasty" />
 		<result column="public_degree" property="publicDegree" />
 		<result column="author_id" property="authorId" />
-		
+
 		<association property="authorEntity" javaType="com.poem.lld.model.Author">
 			<id column="author_id" property="id" />
 			<result column="name" property="name" />
 			<result column="dynasty" property="dynasty" />
 		</association>
 	</resultMap>
+
+	<resultMap type="com.poem.lld.model.Author" id="authorMap">
+		<id column="author_id" property="id" />
+		<result column="name" property="name" />
+		<result column="dynasty" property="dynasty" />
+
+		<collection property="poems" ofType="com.poem.lld.model.Poem">
+			<id column="id" property="id" />
+			<result column="title" property="title" />
+			<result column="content" property="content" />
+			<result column="album" property="album" />
+			<result column="type" property="type" />
+			<result column="url" property="url" />
+			<result column="author" property="author" />
+			<result column="dynasty" property="dynasty" />
+			<result column="public_degree" property="publicDegree" />
+			<result column="author_id" property="authorId" />
+		</collection>
+	</resultMap>
+
 </mapper>

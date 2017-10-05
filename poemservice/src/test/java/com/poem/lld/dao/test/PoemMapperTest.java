@@ -3,6 +3,7 @@ package com.poem.lld.dao.test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.ibatis.io.Resources;
@@ -15,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.poem.lld.mapper.PoemMapper;
+import com.poem.lld.model.Author;
 import com.poem.lld.model.Poem;
 import com.poem.lld.model.PoemQueryCriteria;
 
@@ -22,6 +24,7 @@ import junit.framework.Assert;
 
 public class PoemMapperTest {
     private static final Logger logger = LogManager.getLogger(PoemDaoTest.class);
+    private SqlSessionFactory sqlSessionFactory;
     private PoemMapper poemMapper;
 
     @Before
@@ -29,14 +32,23 @@ public class PoemMapperTest {
         logger.info("Start testing PoeMapper");
         String resource = "SqlMapConfig.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        this.sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         SqlSession sqlSession = sqlSessionFactory.openSession();
         poemMapper = sqlSession.getMapper(PoemMapper.class);
     }
 
+    // private SqlSession createSqlSession() throws IOException {
+    // String resource = "SqlMapConfig.xml";
+    // InputStream inputStream = Resources.getResourceAsStream(resource);
+    // SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+    // SqlSession sqlSession = sqlSessionFactory.openSession();
+    // return sqlSession;
+    // }
+
     @Test
-    public void testQueryById() throws IOException {
+    public void testGetPoemById() {
         Poem poem = poemMapper.getPoemById(1001);
+        poem = poemMapper.getPoemById(1001);
         Assert.assertNotNull(poem);
         System.out.println(poem.toString());
     }
@@ -60,7 +72,7 @@ public class PoemMapperTest {
         filter.setAuthor("李");
         filter.setContent("月");
         filter.setTitle("月");
-        filter.setTypes(Arrays.asList(new String[] {"诗", "词"}));
+        filter.setTypes(Arrays.asList(new String[] { "诗", "词" }));
         List<Poem> poemList = poemMapper.queryPoem(filter);
         Assert.assertNotNull(poemList);
 
@@ -78,7 +90,7 @@ public class PoemMapperTest {
         filter.setAuthor("李");
         filter.setContent("月");
         filter.setTitle("月");
-        filter.setTypes(Arrays.asList(new String[] {"诗", "词"}));
+        filter.setTypes(Arrays.asList(new String[] { "诗", "词" }));
         List<Poem> poemList = poemMapper.searchFullPoem(filter);
         Assert.assertNotNull(poemList);
 
@@ -87,6 +99,25 @@ public class PoemMapperTest {
             poemList.forEach(poem -> {
                 System.out.println(poem);
             });
+        }
+    }
+
+    @Test
+    public void testSearchAuthor() {
+        List<Author> authors = poemMapper.searchAuthor("刘");
+        Assert.assertNotNull(authors);
+        logger.debug("author count: " + authors.size());
+
+        for (Author author : authors) {
+            System.out.println("*************************************************");
+            System.out.println(author.getName() + " (" + author.getDynasty() + ")");
+            System.out.println("Poems: " + author.getPoems().size());
+
+            for (Poem poem : author.getPoems()) {
+                System.out.print(poem.getTitle() + ", ");
+            }
+
+            System.out.println();
         }
     }
 
@@ -122,6 +153,43 @@ public class PoemMapperTest {
         int deleteCount = poemMapper.deletePoem(poem.getId());
         Assert.assertEquals(deleteCount, 1);
         System.out.println(poem.getId() + " is deleted.");
+    }
+
+    @Test
+    public void testGetPoemByIdLazy() {
+        Poem poem = poemMapper.getPoemByIdLazy(1001);
+        Assert.assertNotNull(poem);
+        System.out.println(poem.toString());
+        // System.out.println(poem.getAuthorEntity().toString());
+    }
+
+    @Test
+    public void testCache() throws IOException {
+        SqlSession session1 = this.sqlSessionFactory.openSession();
+        PoemMapper mapper1 = session1.getMapper(PoemMapper.class);
+
+        int poemId = 1001;
+        Poem poem1 = mapper1.getPoemById(poemId);
+        session1.close();
+        System.out.println("url1: " + poem1.getUrl());
+
+        System.out.println("session 2");
+        SqlSession session2 = this.sqlSessionFactory.openSession();
+        PoemMapper mapper2 = session2.getMapper(PoemMapper.class);
+        Poem poem2 = mapper2.getPoemById(poemId);
+        poem2.setUrl(poem2.getUrl() + "A");
+        // poem2.setUrl("test.com");
+        mapper2.updatePoem(poem2);
+        session2.commit();
+        session2.close();
+        System.out.println("url2: " + poem2.getUrl());
+
+        System.out.println("session 3");
+        SqlSession session3 = this.sqlSessionFactory.openSession();
+        PoemMapper mapper3 = session3.getMapper(PoemMapper.class);
+        Poem poem3 = mapper3.getPoemById(poemId);
+        System.out.println("url3: " + poem3.getUrl());
+        session3.close();
     }
 
     // @Test

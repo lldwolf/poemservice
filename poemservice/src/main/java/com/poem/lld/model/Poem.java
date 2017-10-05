@@ -1,7 +1,10 @@
 package com.poem.lld.model;
 
-public class Poem {
+import java.io.Serializable;
 
+public class Poem implements Serializable {
+
+    private static final long serialVersionUID = 4106780223233958986L;
     private int id;
     private String title;
     private String author;
@@ -106,10 +109,10 @@ public class Poem {
         buffer.append(this.getAlbum());
         buffer.append('|');
         
-        if (this.authorEntity != null) {
-            buffer.append("author: " + this.authorEntity.getName());
-        }
-        
+//        if (this.authorEntity != null) {
+//            buffer.append("author: " + this.authorEntity.getName());
+//        }
+//        
         return buffer.toString();
     }
 

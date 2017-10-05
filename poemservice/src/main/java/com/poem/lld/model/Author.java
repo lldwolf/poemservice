@@ -1,9 +1,11 @@
 package com.poem.lld.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Author {
+public class Author implements Serializable {
 
+    private static final long serialVersionUID = 660056963517433734L;
     private int id;
     private String name;
     private String dynasty;
@@ -41,4 +43,8 @@ public class Author {
         this.poems = poems;
     }
 
+    @Override
+    public String toString() {
+        return this.name + " (" + this.dynasty + ")";
+    }
 }
