@@ -33,5 +33,6 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="sqlmap/resultMapper.xml" />
 		<mapper resource="sqlmap/poem.xml" />
 		<mapper resource="sqlmap/poemMapper.xml" />
+		<mapper resource="sqlmap/PoemMapper2.xml" />
 	</mappers>
 </configuration>
