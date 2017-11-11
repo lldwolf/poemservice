@@ -3,21 +3,19 @@ package com.poem.lld.dao.test;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
 import org.junit.Test;
 
+import com.poem.lld.dao.IPoemDao;
 import com.poem.lld.dao.PoemDao;
 import com.poem.lld.model.Poem;
-
-import junit.framework.Assert;
 
 public class PoemDaoTest {
     // private static final Logger logger = LogManager.getLogger(PoemDaoTest.class);
 
     @Test
     public void testQueryById() throws IOException {
-        PoemDao dao = new PoemDao();
+        IPoemDao dao = new PoemDao();
         Poem poem = dao.getPoemById(1001);
         Assert.assertNotNull(poem);
         System.out.println(poem.toString());
@@ -25,7 +23,7 @@ public class PoemDaoTest {
 
     @Test
     public void testQueryByAuthor() throws IOException {
-        PoemDao dao = new PoemDao();
+        IPoemDao dao = new PoemDao();
         List<Poem> poemList = dao.findPoemByAuthor("ËÕéø");
         Assert.assertNotNull(poemList);
 
@@ -39,7 +37,7 @@ public class PoemDaoTest {
 
     @Test
     public void testInsertPoem() throws IOException {
-        PoemDao dao = new PoemDao();
+        IPoemDao dao = new PoemDao();
         Poem poem = new Poem();
         poem.setTitle("¹«°²ÏØ»³¹Å");
         poem.setAlbum("a");

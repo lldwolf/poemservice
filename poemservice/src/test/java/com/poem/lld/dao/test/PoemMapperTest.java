@@ -3,7 +3,6 @@ package com.poem.lld.dao.test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import org.apache.ibatis.io.Resources;
@@ -12,6 +11,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,8 +19,6 @@ import com.poem.lld.mapper.PoemMapper;
 import com.poem.lld.model.Author;
 import com.poem.lld.model.Poem;
 import com.poem.lld.model.PoemQueryCriteria;
-
-import junit.framework.Assert;
 
 public class PoemMapperTest {
     private static final Logger logger = LogManager.getLogger(PoemDaoTest.class);
